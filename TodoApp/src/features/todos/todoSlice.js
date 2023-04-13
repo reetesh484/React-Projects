@@ -13,13 +13,31 @@ export const todoSlice = createSlice({
             let todo = {
                 id:nanoid(),
                 task:action.payload,
-                complete:false
+                complete:false,
+                edit:false
             }
             state.todos.push(todo);
         },
         removeTodo:(state,action) => {
             let id = action.payload
-            state.todos = state.todos.filter(item => item.id!==id)
+            state.todos = state.todos.filter(item => item?.id!==id)
+        },
+        editTodo:(state,action) => {
+            let id = action.payload 
+            state.todos.map((item) => {
+                if(item.id===id){
+                    item.edit = !item.edit
+                }
+            })
+        },
+        updateTodo:(state,action) => {
+            let {todoInput,id}  = action.payload
+            state.todos.map((item) => {
+                if(item.id===id){
+                   item.task = todoInput
+                   item.edit = false;
+                }
+            })
         },
         completeTodo:(state,action) => {
             let uid = action.payload
@@ -32,6 +50,6 @@ export const todoSlice = createSlice({
     }
 })
 
-export const {addTodo,removeTodo,completeTodo} = todoSlice.actions
+export const {addTodo,removeTodo,updateTodo,editTodo,completeTodo} = todoSlice.actions
 
 export default todoSlice.reducer

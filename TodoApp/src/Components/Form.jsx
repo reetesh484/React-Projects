@@ -34,8 +34,9 @@ const Form = () => {
 
           <button
             className="w-full inline-block pt-2 mt-1 pr-5 pb-2 pl-5 text-xl font-medium text-center text-white bg-indigo-500
-            rounded-lg transition duration-200 hover:bg-indigo-600 ease"
+            rounded-lg transition duration-200 disabled:bg-indigo-300 disabled:cursor-not-allowed hover:bg-indigo-600 ease"
             onClick={(e) => handleSubmit(e)}
+            disabled={(todo.trim().length > 0)?false:true}
             type="submit"
           >
             Add
