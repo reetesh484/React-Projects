@@ -1,3 +1,37 @@
+:root{
+    --primary: rgb(231, 173, 86);
+    --secondary: rgb(106, 226, 241);
+}
+
 @tailwind base;
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary) var(--primary);
+  }
+  
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 15px;
+    opacity:0;
+  }
+  
+  *::-webkit-scrollbar-track {
+    background: var(--primary);
+    border-radius: 5px;
+    opacity: 0;
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--secondary);
+    border-radius: 14px;
+    border: 3px solid var(--primary);
+    opacity:0;
+  }
+  
 @tailwind components;
 @tailwind utilities;
+
+.card{
+    @apply w-full
+}
