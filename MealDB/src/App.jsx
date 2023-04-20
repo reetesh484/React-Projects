@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { createContext, useState, useEffect } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import Home from "./Components/Home";
+import Navbar from "./Components/Navbar";
+import axios from "axios";
+
+export const NavContext = createContext(true);
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [open, setOpen] = useState(true);
+  const [meals, setMeals] = useState([]);
 
+  useEffect(() => {
+    axios
+      .get("https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood")
+      .then((res) => setMeals(res.data))
+      .catch((err) => console.log(err));
+  }, []);
+
+  const toggleNav = () => {
+    setOpen(!open);
+  };
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <NavContext.Provider value={{ open, toggleNav }}>
+        <Navbar />
+        <Home meals={meals}/>
+      </NavContext.Provider>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
