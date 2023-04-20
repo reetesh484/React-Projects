@@ -5,28 +5,48 @@ import "./App.css";
 import Home from "./Components/Home";
 import Navbar from "./Components/Navbar";
 import axios from "axios";
+import { getMealByCategory,getMealByName } from "./utils/mealMethods";
 
 export const NavContext = createContext(true);
+// export const category = createContext("Vegetarian");
+// export const search = createContext("")
 
 function App() {
   const [open, setOpen] = useState(true);
   const [meals, setMeals] = useState([]);
+  const [category, setCategory] = useState("Vegetarian");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios
-      .get("https://www.themealdb.com/api/json/v1/1/filter.php?c=Seafood")
-      .then((res) => setMeals(res.data))
+    if(search){
+      getMealByName(search).then(res => setMeals(res)).then(err => console.log(err));
+    }else{
+      getMealByCategory(category)
+      .then((res) => setMeals(res))
       .catch((err) => console.log(err));
-  }, []);
+    }
+  }, [category,search]);
+
 
   const toggleNav = () => {
     setOpen(!open);
   };
+
+  const changeCategory = (value) => {
+    setCategory(value);
+  };
+
+  const updateSearch = (value) => {
+    setSearch(value);
+  }
+
   return (
     <div className="App">
-      <NavContext.Provider value={{ open, toggleNav }}>
+      <NavContext.Provider
+        value={{ open, toggleNav, category, changeCategory, updateSearch }}
+      >
         <Navbar />
-        <Home meals={meals}/>
+        <Home meals={meals} />
       </NavContext.Provider>
     </div>
   );

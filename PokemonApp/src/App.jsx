@@ -15,8 +15,6 @@ function App() {
   const [pokemon, setPokemon] = useState([]);
   const details = useSelector((state) => state.poke.details, shallowEqual);
 
-  //  const details = []
-  // const dispatch = useDispatch();
 
   useEffect(() => {
     axios
