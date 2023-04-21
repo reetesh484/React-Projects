@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 
 const Home = (props) => {
   return (
-    <div className="flex">
+    <div className="flex flex-col md:flex-row">
       <Sidebar />
       <Dashboard meals={props.meals} />
     </div>

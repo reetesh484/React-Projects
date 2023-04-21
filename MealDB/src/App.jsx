@@ -5,7 +5,7 @@ import "./App.css";
 import Home from "./Components/Home";
 import Navbar from "./Components/Navbar";
 import axios from "axios";
-import { getMealByCategory,getMealByName } from "./utils/mealMethods";
+import { getMealByCategory,getMealByName, getMealByArea } from "./utils/mealMethods";
 
 export const NavContext = createContext(true);
 // export const category = createContext("Vegetarian");
@@ -15,17 +15,22 @@ function App() {
   const [open, setOpen] = useState(true);
   const [meals, setMeals] = useState([]);
   const [category, setCategory] = useState("Vegetarian");
+  const [area,setArea] = useState("")
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     if(search){
       getMealByName(search).then(res => setMeals(res)).then(err => console.log(err));
-    }else{
+    }else if(area){
+      console.log(area)
+      getMealByArea(area).then(res => setMeals(res)).then(err => console.log(err))
+    }
+    else{
       getMealByCategory(category)
       .then((res) => setMeals(res))
       .catch((err) => console.log(err));
     }
-  }, [category,search]);
+  }, [category,search,area]);
 
 
   const toggleNav = () => {
@@ -40,10 +45,15 @@ function App() {
     setSearch(value);
   }
 
+  const changeArea = (value) => {
+    console.log("area changed")
+    setArea(value);
+  }
+
   return (
     <div className="App">
       <NavContext.Provider
-        value={{ open, toggleNav, category, changeCategory, updateSearch }}
+        value={{ open, toggleNav, category, changeCategory, updateSearch, area,changeArea }}
       >
         <Navbar />
         <Home meals={meals} />
