@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState} from "react";
+import "./App.css";
+import SearchInput from "./components/SearchInput";
+import { createContext } from "react";
+import Movie from "./components/Movie";
+import bg from './assets/bg.jpg'
+
+export const MovieContext = createContext([]);
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [result, setResult] = useState([]);
+
+
+  const updateResult = (value) => {
+    setResult(value)
+  }
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div className="App p-4 flex flex-col justify-center bg-cover bg-gradient-to-r from-transparent to-black items-center bg-blue-200 min-h-screen" style={{backgroundImage:`url(${bg})`}}>
+      <h1 className="text-6xl font-bold">Find Your Movie</h1>
+      <MovieContext.Provider value={{result,updateResult}}>
+        <SearchInput />
+        {
+          result?.length > 0 && <Movie />
+        }
+      </MovieContext.Provider>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
