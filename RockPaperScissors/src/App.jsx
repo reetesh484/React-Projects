@@ -1,35 +1,108 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import { FaHandPaper, FaHandRock, FaHandScissors } from "react-icons/fa";
 
-function App() {
-  const [count, setCount] = useState(0)
+const actions = {
+  rock:"scissors",
+  paper:"rock",
+  scissors:"paper"
+}
 
+function randomAction(){
+  const keys = Object.keys(actions);
+  const index = Math.floor(Math.random() * keys.length);
+
+  return keys[index];
+}
+
+function calculateWinner(action1,action2){
+  if(action1===action2) return 0;
+  else if(actions[action1] === action2) return -1;
+  else if(actions[action2] === action1) return 1;
+  return null;
+}
+
+const Player = ({ name = "Player", score = 0, action = "rock" }) => {
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="player">
+      <div className="h-6 bg-green-400 text-white">
+        {name}: {score}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <div className="flex justify-center items-center h-full text-3xl">
+        {action && <ActionIcon action={action} className="text-4xl" />}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
+  );
+};
+
+const ActionIcon = ({ action, ...props }) => {
+  const icons = {
+    rock: FaHandRock,
+    paper: FaHandPaper,
+    scissors: FaHandScissors,
+  };
+  const Icon = icons[action];
+
+  return <Icon {...props} />;
+};
+
+const ActionButton = ({ action = "rock", onActionSelected }) => {
+  return (
+    <button className="btn" onClick={() => onActionSelected(action)}>
+      {" "}
+      <ActionIcon action={action} className="mx-auto" />{" "}
+    </button>
+  );
+};
+
+const ShowWinner = ({winner=0}) => {
+  const text = {
+    "-1":"You Win!",
+    "0":"Draw!",
+    "1":"You lose!"
+  }
+  return (
+    <h2 className="text-2xl">{text[winner]}</h2>
   )
 }
 
-export default App
+function App() {
+  const [playerAction, setPlayerAction] = useState("");
+  const [computerAction, setComputerAction] = useState("");
+  const [playerScore,setPlayerScore] = useState(0);
+  const [computerScore,setComputerScore] = useState(0)
+  const [winner,setWinner] = useState(0)
+
+  const onActionSelected = (selectedAction) => {
+    setPlayerAction(selectedAction);
+    const newComputerAction = randomAction();
+    setComputerAction(newComputerAction);
+
+    const newWinner = calculateWinner(selectedAction,newComputerAction);
+    setWinner(newWinner);
+    if(newWinner === -1){
+      setPlayerScore(playerScore+1);
+    }else if(newWinner === 1){
+      setComputerScore(computerScore + 1);
+    }
+  };
+  return (
+    <div className="App text-center bg-blue-200 h-screen flex justify-center items-center flex-col">
+      <h1 className="text-4xl font-semibold ">Rock Paper Scissors</h1>
+      <div>
+        <div className="container">
+          <Player name="Player" score={playerScore} action={playerAction} />
+          <Player name="Computer" score={computerScore} action={computerAction} />
+        </div>
+        <div>
+          <ActionButton action="rock" onActionSelected={onActionSelected} />
+          <ActionButton action="paper" onActionSelected={onActionSelected} />
+          <ActionButton action="scissors" onActionSelected={onActionSelected} />
+        </div>
+        { playerAction && <ShowWinner winner={winner} />}
+      </div>
+    </div>
+  );
+}
+
+export default App;
